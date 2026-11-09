@@ -1,0 +1,6 @@
+[
+  {"order_id": "NW-1001", "email": "amara.test@example.com", "status": "shipped", "items": ["Trail Runner Shoe"], "eta": "2026-11-12"},
+  {"order_id": "NW-1002", "email": "jon.test@example.com", "status": "processing", "items": ["20L Day Backpack", "Insulated Water Bottle"], "eta": "2026-11-15"},
+  {"order_id": "NW-1003", "email": "sara.test@example.com", "status": "delivered", "items": ["Fleece Midlayer"], "eta": "2026-11-05"},
+  {"order_id": "NW-1004", "email": "liu.test@example.com", "status": "cancelled", "items": ["Road Racer Shoe"], "eta": null}
+]

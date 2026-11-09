@@ -1,0 +1,5 @@
+[
+  {"code": "WINTER15", "description": "15% off all outerwear and winter accessories", "valid_until": "2026-11-30"},
+  {"code": "SHIP-FREE", "description": "Free shipping on orders over $60", "valid_until": "2026-12-31"},
+  {"code": "OCT10", "description": "10% off everything", "valid_until": "2026-10-31"}
+]

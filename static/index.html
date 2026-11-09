@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Northwind Voice Agent - test</title>
+<style>
+  body { font-family: -apple-system, Segoe UI, Roboto, sans-serif; margin: 0; background: #f5f6f8; color: #1d2330; }
+  header { background: #1d2330; color: #fff; padding: 14px 20px; }
+  header h1 { margin: 0; font-size: 18px; }
+  header p { margin: 4px 0 0; font-size: 13px; opacity: .75; }
+  #log { max-width: 720px; margin: 16px auto; height: 60vh; overflow-y: auto; background: #fff; border-radius: 10px; padding: 14px; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+  .msg { margin: 8px 0; padding: 9px 12px; border-radius: 10px; max-width: 80%; line-height: 1.4; font-size: 14px; }
+  .user { background: #e6f0ff; margin-left: auto; }
+  .agent { background: #f1f3f6; }
+  .row { max-width: 720px; margin: 0 auto; display: flex; gap: 8px; padding: 0 0 16px; }
+  input { flex: 1; padding: 10px; border: 1px solid #d0d4dc; border-radius: 8px; font-size: 14px; }
+  button { background: #2b6cb0; color: #fff; border: 0; padding: 10px 14px; border-radius: 8px; cursor: pointer; font-size: 14px; }
+  button.secondary { background: #e2e6ee; color: #1d2330; }
+  button:disabled { opacity: .4; }
+  .hint { max-width: 720px; margin: 0 auto 8px; font-size: 12px; color: #6b7280; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Northwind Outfitters - voice agent test</h1>
+  <p>Type or use the mic (Chrome). Synthetic data only. Try: "Do you have a waterproof running shoe?" or "Check order NW-1001 for amara.test@example.com".</p>
+</header>
+<div class="hint" id="hint"></div>
+<div id="log"></div>
+<div class="row">
+  <input id="text" placeholder="Type a message" autocomplete="off">
+  <button id="mic" class="secondary">Mic</button>
+  <button id="send">Send</button>
+  <button id="speak" class="secondary">Voice: on</button>
+</div>
+
+<script>
+const sessionId = "web-" + Math.random().toString(36).slice(2, 10);
+const log = document.getElementById("log");
+const input = document.getElementById("text");
+let speakReplies = true;
+
+function add(role, text) {
+  const div = document.createElement("div");
+  div.className = "msg " + (role === "user" ? "user" : "agent");
+  div.textContent = text;
+  log.appendChild(div);
+  log.scrollTop = log.scrollHeight;
+}
+
+function say(text) {
+  if (!speakReplies || !("speechSynthesis" in window)) return;
+  speechSynthesis.cancel();
+  speechSynthesis.speak(new SpeechSynthesisUtterance(text));
+}
+
+async function send(text) {
+  if (!text.trim()) return;
+  add("user", text);
+  input.value = "";
+  document.getElementById("send").disabled = true;
+  try {
+    const res = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ session_id: sessionId, message: text }),
+    });
+    const body = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(body.detail || `Request failed (${res.status})`);
+    add("agent", body.reply);
+    say(body.reply);
+  } catch (err) {
+    add("agent", "Error: " + err.message);
+  } finally {
+    document.getElementById("send").disabled = false;
+  }
+}
+
+document.getElementById("send").onclick = () => send(input.value);
+input.addEventListener("keydown", e => { if (e.key === "Enter") send(input.value); });
+document.getElementById("speak").onclick = (e) => {
+  speakReplies = !speakReplies;
+  e.target.textContent = "Voice: " + (speakReplies ? "on" : "off");
+};
+
+const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+const mic = document.getElementById("mic");
+if (Recognition) {
+  const rec = new Recognition();
+  rec.lang = "en-US";
+  rec.interimResults = false;
+  rec.onresult = (e) => send(e.results[0][0].transcript);
+  rec.onend = () => { mic.textContent = "Mic"; };
+  mic.onclick = () => { mic.textContent = "Listening..."; rec.start(); };
+} else {
+  mic.disabled = true;
+  document.getElementById("hint").textContent = "Speech input needs Chrome. Typing still works.";
+}
+
+add("agent", "Thanks for calling Northwind Outfitters. I can help with products, order status, and current offers. How can I help?");
+</script>
+</body>
+</html>

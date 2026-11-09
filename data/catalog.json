@@ -1,0 +1,10 @@
+[
+  {"sku": "TR-100", "name": "Trail Runner Shoe", "category": "footwear", "price": 89.00, "stock": 14, "rating": 4.6, "tags": ["running", "trail", "shoe", "waterproof"]},
+  {"sku": "RS-220", "name": "Road Racer Shoe", "category": "footwear", "price": 120.00, "stock": 0, "rating": 4.8, "tags": ["running", "road", "shoe", "marathon"]},
+  {"sku": "DJ-310", "name": "Lightweight Rain Jacket", "category": "outerwear", "price": 145.00, "stock": 6, "rating": 4.4, "tags": ["jacket", "rain", "waterproof", "hiking"]},
+  {"sku": "FL-050", "name": "Fleece Midlayer", "category": "outerwear", "price": 68.00, "stock": 22, "rating": 4.5, "tags": ["fleece", "warm", "layer", "winter"]},
+  {"sku": "BP-400", "name": "20L Day Backpack", "category": "bags", "price": 75.50, "stock": 9, "rating": 4.7, "tags": ["backpack", "daypack", "hiking", "commute"]},
+  {"sku": "WB-010", "name": "Insulated Water Bottle", "category": "accessories", "price": 24.00, "stock": 60, "rating": 4.3, "tags": ["bottle", "insulated", "hydration", "gym"]},
+  {"sku": "HT-205", "name": "Merino Wool Beanie", "category": "accessories", "price": 28.00, "stock": 0, "rating": 4.2, "tags": ["hat", "beanie", "wool", "winter"]},
+  {"sku": "SK-900", "name": "Thermal Base Layer Set", "category": "apparel", "price": 54.00, "stock": 11, "rating": 4.6, "tags": ["thermal", "base layer", "winter", "ski"]}
+]
